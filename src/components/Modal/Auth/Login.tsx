@@ -16,10 +16,10 @@ const Login: React.FC<LoginProps> = () => {
   });
   const [signInWithEmailAndPassword, user, loading, error] =
     useSignInWithEmailAndPassword(auth);
-  //Firebase logic
 
+  //Firebase logic
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault;
+    event.preventDefault();
 
     signInWithEmailAndPassword(loginForm.email, loginForm.password);
   };
