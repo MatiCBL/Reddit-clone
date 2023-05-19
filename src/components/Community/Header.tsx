@@ -36,7 +36,13 @@ const Header: React.FC<HeaderProps> = ({ communityData }) => {
                 r/{communityData.id}
               </Text>
             </Flex>
-            <Button variant={isJoined ? "outline" : "solid"}>
+            <Button
+              variant={isJoined ? "outline" : "solid"}
+              height="30px"
+              pr={6}
+              pl={6}
+              onClick={() => {}}
+            >
               {isJoined ? "Joined" : "Join"}
             </Button>
           </Flex>
