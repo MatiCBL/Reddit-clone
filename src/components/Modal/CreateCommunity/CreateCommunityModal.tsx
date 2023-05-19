@@ -68,6 +68,7 @@ const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
 
     try {
       const communityDocRef = doc(firestore, "communities", communityName);
+
       // Check if community exist in db
       const communityDoc = await getDoc(communityDocRef);
 
