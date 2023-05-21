@@ -1,9 +1,13 @@
-import { useState, useEffect } from "react";
+import { collection, getDocs } from "firebase/firestore";
+import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useRecoilState } from "recoil";
-import { Community, communityState } from "../atoms/communitiesAtom";
+import {
+  Community,
+  CommunitySnippet,
+  communityState,
+} from "../atoms/communitiesAtom";
 import { auth, firestore } from "../firebase/clientApp";
-import { getDocs, collection } from "firebase/firestore";
 
 const useCommunityData = () => {
   const [user] = useAuthState(auth);
@@ -31,10 +35,18 @@ const useCommunityData = () => {
     try {
       // get users snippets
       const snippetDocs = await getDocs(
-        collection(firestore, `users/&{user?.uid}/communitySnippets}`)
+        collection(firestore, `users/${user?.uid}/communitySnippets`)
       );
+
       const snippets = snippetDocs.docs.map((doc) => ({ ...doc.data() }));
-    } catch (error) {}
+      setCommunityStateValue((prev) => ({
+        ...prev,
+        mySnippets: snippets as CommunitySnippet[],
+      }));
+    } catch (error) {
+      console.log("getMySnippet error", error);
+    }
+    setLoading(false);
   };
 
   const joinCommunity = (communityData: Community) => {};
@@ -44,11 +56,14 @@ const useCommunityData = () => {
   useEffect(() => {
     if (!user) return;
     getMySnippets();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
+
   return {
     // data and functions
     communityStateValue,
     onJoinOrLeaveCommunity,
+    loading,
   };
 };
 export default useCommunityData;
