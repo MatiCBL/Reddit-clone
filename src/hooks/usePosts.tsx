@@ -13,11 +13,6 @@ const usePosts = () => {
   const onSelectPost = () => {};
 
   const onDeletePost = async (post: Post): Promise<boolean> => {
-    console.log("DELETING POST: ", post.id);
-    console.log(post.id);
-    console.log(post);
-    console.log(post.imageURL);
-
     try {
       // check if image, delete if exists
       if (post.imageURL) {
