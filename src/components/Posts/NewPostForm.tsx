@@ -152,7 +152,7 @@ const NewPostForm: React.FC<NewPostFormProps> = ({ user }) => {
             textInputs={textInputs}
             handleCreatePost={handleCreatePost}
             onChange={onTextChange}
-            loading={false}
+            loading={loading}
           />
         )}
         {selectedTab === "Images & Video" && (
