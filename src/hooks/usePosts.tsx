@@ -10,18 +10,24 @@ import {
 import { deleteObject, ref } from "firebase/storage";
 import { useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { communityState } from "../atoms/communitiesAtom";
 import { Post, PostVote, postState } from "../atoms/postsAtom";
 import { auth, firestore, storage } from "../firebase/clientApp";
+import { authModalState } from "../atoms/authModalAtom";
 
 const usePosts = () => {
   const [user] = useAuthState(auth);
   const [postStateValue, setPostStateValue] = useRecoilState(postState);
   const currentCommunity = useRecoilValue(communityState).currentCommunity;
+  const setAuthModalState = useSetRecoilState(authModalState);
 
   const onVote = async (post: Post, vote: number, communityId: string) => {
     // check for a user => if not, open auth modal
+    if (!user?.uid) {
+      setAuthModalState({ open: true, view: "login" });
+      return;
+    }
 
     try {
       const { voteStatus } = post;
@@ -164,6 +170,17 @@ const usePosts = () => {
     getCommunityPostVotes(currentCommunity?.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, currentCommunity]);
+
+  useEffect(() => {
+    if (!user) {
+      // clear user post votes
+      setPostStateValue((prev) => ({
+        ...prev,
+        postVotes: [],
+      }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   return {
     postStateValue,
