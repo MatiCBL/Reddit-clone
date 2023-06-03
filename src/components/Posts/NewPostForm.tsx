@@ -25,7 +25,7 @@ type NewPostFormProps = {
   communityImageURL?: string;
 };
 
-const formTabs: TabItem[] = [
+const formTabs: TabsItem[] = [
   {
     title: "Post",
     icon: IoDocumentText,
@@ -48,7 +48,7 @@ const formTabs: TabItem[] = [
   },
 ];
 
-export type TabItem = {
+export type TabsItem = {
   title: string;
   icon: typeof Icon.arguments;
 };
@@ -81,6 +81,7 @@ const NewPostForm: React.FC<NewPostFormProps> = ({
       numberOfComments: 0,
       voteStatus: 0,
       createdAt: serverTimestamp() as Timestamp,
+      id: "",
     };
 
     setLoading(true);
