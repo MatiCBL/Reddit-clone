@@ -7,7 +7,7 @@ import PageContent from "@/src/components/Layout/PageContent";
 import Posts from "@/src/components/Posts/Posts";
 import { firestore } from "@/src/firebase/clientApp";
 import { doc, getDoc } from "firebase/firestore";
-import { GetServerSidePropsContext } from "next";
+import { GetServerSidePropsContext, NextPage } from "next";
 import React, { useEffect } from "react";
 import { useSetRecoilState } from "recoil";
 import safeJsonStringify from "safe-json-stringify";
@@ -16,7 +16,7 @@ type CommunityPageProps = {
   communityData: Community;
 };
 
-const CommunityPage: React.FC<CommunityPageProps> = ({ communityData }) => {
+const CommunityPage: NextPage<CommunityPageProps> = ({ communityData }) => {
   const setCommunityStateValue = useSetRecoilState(communityState);
 
   useEffect(() => {
@@ -46,6 +46,7 @@ const CommunityPage: React.FC<CommunityPageProps> = ({ communityData }) => {
     </>
   );
 };
+export default CommunityPage;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   // get community data and pass it to client
@@ -71,5 +72,3 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     console.log("getServerSideProps error", error);
   }
 }
-
-export default CommunityPage;
