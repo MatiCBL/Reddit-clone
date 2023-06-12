@@ -51,20 +51,25 @@ export default CommunityPage;
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   // get community data and pass it to client
   try {
-    const communityDocRef = doc(
-      firestore,
-      "communities",
-      context.query.communityId as string
-    );
-    const communityDoc = await getDoc(communityDocRef);
+    // const communityDocRef = doc(
+    //   firestore,
+    //   "communities",
+    //   context.query.communityId as string
+    // );
+    // const communityDoc = await getDoc(communityDocRef);
 
+    // return {
+    //   props: {
+    //     communityData: "communityDoc.exists()
+    //       ? JSON.parse(
+    //           safeJsonStringify({ id: communityDoc.id, ...communityDoc.data() })
+    //         )
+    //       : "","
+    //   },
+    // };
     return {
       props: {
-        communityData: communityDoc.exists()
-          ? JSON.parse(
-              safeJsonStringify({ id: communityDoc.id, ...communityDoc.data() })
-            )
-          : "",
+        communityData: ""
       },
     };
   } catch (error) {
