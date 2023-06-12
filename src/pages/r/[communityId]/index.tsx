@@ -16,11 +16,10 @@ type CommunityPageProps = {
   communityData: Community;
 };
 
-const CommunityPage: NextPage<CommunityPageProps> = ({ communityData, communityDocRef }) => {
+const CommunityPage: NextPage<CommunityPageProps> = ({ communityData }) => {
   const setCommunityStateValue = useSetRecoilState(communityState);
 
   useEffect(() => {
-    console.log(communityDocRef, 'communityDocRef')
     setCommunityStateValue((prev) => ({
       ...prev,
       currentCommunity: communityData,
