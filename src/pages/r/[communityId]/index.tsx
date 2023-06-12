@@ -6,7 +6,7 @@ import NotFound from "@/src/components/Community/NotFound";
 import PageContent from "@/src/components/Layout/PageContent";
 import Posts from "@/src/components/Posts/Posts";
 import { firestore } from "@/src/firebase/clientApp";
-import { doc, getDoc } from "firebase/firestore";
+import { DocumentData, DocumentReference, doc, getDoc } from "firebase/firestore";
 import { GetServerSidePropsContext, NextPage } from "next";
 import React, { useEffect } from "react";
 import { useSetRecoilState } from "recoil";
@@ -51,25 +51,26 @@ export default CommunityPage;
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   // get community data and pass it to client
   try {
-    // const communityDocRef = doc(
-    //   firestore,
-    //   "communities",
-    //   context.query.communityId as string
-    // );
-    // const communityDoc = await getDoc(communityDocRef);
+    const communityDocRef = doc(
+      firestore,
+      "communities",
+      context.query.communityId as string
+    );
+    
+    if(communityDocRef.firestore.app.options.appId) {
+      communityDocRef.firestore.app.options.appId = communityDocRef.firestore.app.options.appId.replace(/\n/g, "")
+    }
+   
+    const communityDoc = await getDoc(communityDocRef);
 
-    // return {
-    //   props: {
-    //     communityData: "communityDoc.exists()
-    //       ? JSON.parse(
-    //           safeJsonStringify({ id: communityDoc.id, ...communityDoc.data() })
-    //         )
-    //       : "","
-    //   },
-    // };
     return {
       props: {
-        communityData: ""
+        communityDocRef: JSON.stringify(communityDocRef),
+        communityData: communityDoc && communityDoc.exists()
+          ? JSON.parse(
+              safeJsonStringify({ id: communityDoc.id, ...communityDoc.data() })
+            )
+          : "",
       },
     };
   } catch (error) {
