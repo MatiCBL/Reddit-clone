@@ -51,12 +51,12 @@ export default CommunityPage;
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   // get community data and pass it to client
   try {
-    // const communityDocRef = doc(
-    //   firestore,
-    //   "communities",
-    //   context.query.communityId as string
-    // );
-    // const communityDoc = await getDoc(communityDocRef);
+    const communityDocRef = doc(
+      firestore,
+      "communities",
+      context.query.communityId as string
+    );
+    const communityDoc = await getDoc(communityDocRef);
 
     // return {
     //   props: {
