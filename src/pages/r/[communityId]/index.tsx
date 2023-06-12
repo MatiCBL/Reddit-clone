@@ -16,10 +16,12 @@ type CommunityPageProps = {
   communityData: Community;
 };
 
-const CommunityPage: NextPage<CommunityPageProps> = ({ communityData }) => {
+const CommunityPage: NextPage<any> = ({ communityData, communityDocRef }) => {
   const setCommunityStateValue = useSetRecoilState(communityState);
 
   useEffect(() => {
+
+    console.log(communityDocRef, 'communityDocRef')
     setCommunityStateValue((prev) => ({
       ...prev,
       currentCommunity: communityData,
@@ -56,7 +58,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       "communities",
       context.query.communityId as string
     );
-    const communityDoc = await getDoc(communityDocRef);
+    // const communityDoc = await getDoc(communityDocRef);
 
     // return {
     //   props: {
@@ -69,7 +71,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     // };
     return {
       props: {
-        communityData: ""
+        communityData: "",
+        communityDocRef,
       },
     };
   } catch (error) {
