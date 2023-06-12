@@ -6,7 +6,7 @@ import NotFound from "@/src/components/Community/NotFound";
 import PageContent from "@/src/components/Layout/PageContent";
 import Posts from "@/src/components/Posts/Posts";
 import { firestore } from "@/src/firebase/clientApp";
-import { doc, getDocFromServer } from "firebase/firestore";
+import { DocumentData, DocumentReference, doc, getDoc } from "firebase/firestore";
 import { GetServerSidePropsContext, NextPage } from "next";
 import React, { useEffect } from "react";
 import { useSetRecoilState } from "recoil";
@@ -16,12 +16,10 @@ type CommunityPageProps = {
   communityData: Community;
 };
 
-const CommunityPage: NextPage<any> = ({ communityData, communityDocRef, communityDoc, err }) => {
+const CommunityPage: NextPage<CommunityPageProps> = ({ communityData, communityDocRef }) => {
   const setCommunityStateValue = useSetRecoilState(communityState);
-  console.log(err, 'err')
+
   useEffect(() => {
-    console.log(err, 'err')
-    console.log(communityDoc, 'communityDoc')
     console.log(communityDocRef, 'communityDocRef')
     setCommunityStateValue((prev) => ({
       ...prev,
@@ -54,41 +52,28 @@ export default CommunityPage;
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   // get community data and pass it to client
   try {
-    let communityDocRef = doc(
+    const communityDocRef = doc(
       firestore,
       "communities",
       context.query.communityId as string
     );
-
-
-    let communityDoc = null;
-    let err;
-    try {
-      communityDoc =  await getDocFromServer(communityDocRef);
-    } catch(e) {
-      err = e;
-      console.log(e, 'eeeeeeee')
+    
+    if(communityDocRef.firestore.app.options.appId) {
+      communityDocRef.firestore.app.options.appId = communityDocRef.firestore.app.options.appId.replace(/\n/g, "")
     }
+   
+    const communityDoc = await getDoc(communityDocRef);
 
     return {
       props: {
-        communityData: "",
-        //communityDoc?.exists()
-          // ? JSON.parse(
-          //     safeJsonStringify({ id: communityDoc.id, ...communityDoc.data() })
-          //   )
-          // : "",
-          communityDocRef: JSON.stringify(communityDocRef),
-          communityDoc: JSON.stringify(communityDoc),
-          err: err || null,
+        communityDocRef: JSON.stringify(communityDocRef),
+        communityData: communityDoc && communityDoc.exists()
+          ? JSON.parse(
+              safeJsonStringify({ id: communityDoc.id, ...communityDoc.data() })
+            )
+          : "",
       },
     };
-    // return {
-    //   props: {
-    //     communityData: "",
-    //     communityDocRef,
-    //   },
-    // };
   } catch (error) {
     // Could add error page here.
     console.log("getServerSideProps error", error);
