@@ -19,7 +19,7 @@
     "@types/react": "18.2.6",
     "@types/react-dom": "18.2.4",
     "eslint-config-next": "^13.4.4",
-    "firebase": "^9.21.0",
+    "firebase": "^9.22.2",
     "firebase-functions": "^4.4.0",
     "framer-motion": "^10.12.10",
     "moment": "^2.29.4",
